@@ -7,9 +7,9 @@
 #X obj 67 530 -~ 0.25;
 #X obj 147 235 *;
 #X obj 156 158 nbx 5 20 0 1e+37 0 0 empty empty phasor_rate_(r) 0 -15
-0 20 -262144 -1 -1 1 256;
+0 20 -262144 -1 -1 1.5 256;
 #X obj 15 158 nbx 5 20 0 1e+37 0 0 empty empty ms_ramp_(x) 0 -15 0
-20 -262144 -1 -1 79 256;
+20 -262144 -1 -1 131 256;
 #X obj 159 189 t b f f;
 #X msg 152 291 500;
 #X obj 22 346 *~ 1;
@@ -107,7 +107,7 @@
 #X obj 104 117 bng 30 250 50 0 \$0-graph empty graph_output 35 15 0
 15 -262144 -1 -1;
 #X obj 108 66 loadbang;
-#N canvas 1398 173 399 634 \$0-graphs 0;
+#N canvas 1402 190 399 634 \$0-graphs 0;
 #X obj 28 19 cnv 15 350 550 empty empty empty 20 12 0 14 -261234 -66577
 0;
 #N canvas 0 50 450 250 (subpatch) 0;
@@ -151,10 +151,10 @@ ylabel -5 -0.25 0 0.25 \;;
 #X text 204 381 o = 0.5 / y;
 #X text 47 244 offset;
 #X text 66 347 y;
-#X text 81 466 rewrap for pause in middle;
 #X text 135 522 to cos indexing;
 #X obj 18 265 +~ 0.25;
 #X obj 187 109 t b b;
+#X text 81 466 rewrap for pause at 0.5;
 #X connect 0 0 5 0;
 #X connect 1 0 64 2;
 #X connect 2 0 31 0;
@@ -171,8 +171,8 @@ ylabel -5 -0.25 0 0.25 \;;
 #X connect 10 0 33 0;
 #X connect 11 0 2 0;
 #X connect 12 0 64 0;
-#X connect 12 0 76 0;
-#X connect 26 0 77 0;
+#X connect 12 0 75 0;
+#X connect 26 0 76 0;
 #X connect 27 0 8 0;
 #X connect 28 0 7 0;
 #X connect 31 0 3 0;
@@ -184,7 +184,7 @@ ylabel -5 -0.25 0 0.25 \;;
 #X connect 66 1 68 1;
 #X connect 66 1 11 1;
 #X connect 67 0 68 0;
-#X connect 68 0 76 1;
-#X connect 76 0 4 0;
-#X connect 77 0 27 0;
-#X connect 77 1 28 0;
+#X connect 68 0 75 1;
+#X connect 75 0 4 0;
+#X connect 76 0 27 0;
+#X connect 76 1 28 0;
