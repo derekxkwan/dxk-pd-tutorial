@@ -1,82 +1,128 @@
-#N canvas 184 155 985 840 12;
+#N canvas 149 174 1237 647 12;
+#X obj 67 505 *~ 0.5;
+#X obj 75 563 cos~;
+#X obj 24 394 clip~ 0 1;
+#X obj 29 467 wrap~;
+#X obj 31 310 wrap~;
+#X obj 67 530 -~ 0.25;
+#X obj 147 235 *;
+#X obj 156 158 nbx 5 20 0 1e+37 0 0 empty empty phasor_rate_(r) 0 -15
+0 20 -262144 -1 -1 1 256;
+#X obj 15 158 nbx 5 20 0 1e+37 0 0 empty empty ms_ramp_(x) 0 -15 0
+20 -262144 -1 -1 79 256;
+#X obj 159 189 t b f f;
+#X msg 152 291 500;
+#X obj 22 346 *~ 1;
+#X obj 15 224 phasor~ 1;
+#X obj 343 95 cnv 15 450 100 empty empty empty 20 12 0 14 -262130 -66577
+0;
+#X text 355 151 SOLN: use the 1/2 of a sine wave to window;
+#X text 401 175 and pause in the middle.;
+#X text 404 127 where the loop is driven by a 0-1 phasor~;
+#X text 357 106 GOAL: an x ms ramp at the ends of a loop window;
+#X text 27 198 loop indexer;
+#X obj 324 207 cnv 15 450 175 empty empty empty 20 12 0 14 -203904
+-66577 0;
+#X obj 333 389 cnv 15 450 225 empty empty empty 20 12 0 14 -204800
+-66577 0;
+#X text 339 399 TO GET DESIRED MULTIPLIER Y:;
+#X text 339 423 - multiplying at r Hz 0-1 phasor~ by y makes your ramp
+;
+#X text 354 445 get from 0 to y in 1/r secs or 1000/r msecs.;
+#X text 337 567 - x ms = 500/(r*y) -> y = 500/(r*x);
+#X obj 49 19 cnv 15 1000 60 empty empty signal-driven_loop_windowing
+20 12 0 25 -260097 -66577 0;
+#X obj 187 84 loadbang;
+#X msg 15 96 250;
+#X msg 133 100 1;
+#X text 901 25 Derek Kwan \, 2016;
+#X text 984 56 gpl v3;
+#X obj 29 442 +~ 0.5;
+#X text 339 469 - or 0 to 1 in 1000/(r*y) msecs;
+#X obj 170 318 /;
+#X obj 147 260 t b b f;
+#X text 355 276 instead of the clipped value of 1;
+#X text 327 213 IDEA: mult 0-1 phasor~ by a value y \, and clip at
+1;
+#X text 337 236 - for it to pause "in the middle" \, pause at 0.5;
+#X text 338 255 - SO: add 0.5 and rewrap to get pause at 0.5;
+#X text 355 314 ramp -> clip \, need to split initial ramp in half
+;
+#X text 339 301 - AND since we want ramp -> clip -> ramp instead of
+;
+#X text 338 339 - MEANING: start at 0.5 with ramp \, clip \,;
+#X text 358 361 then after the clip spend time getting back to 0.5
+;
+#X text 333 493 - since we are give the dur of the ramp up or down
+;
+#X text 351 516 (which is actually one half of the real ramp) \,;
+#X text 356 539 we need half the time (500/(r*y) ms);
+#X obj 792 208 cnv 15 400 100 empty empty empty 20 12 0 14 -204786
+-66577 0;
+#X text 815 213 TO GET A PHASOR STARTING AT 0.5 WHEN THE;
+#X text 817 237 ORIGINAL STARTS AT 0:;
+#X text 809 262 - offset the phasor by a value o and wrap;
+#X obj 792 321 cnv 15 425 100 empty empty empty 20 12 0 14 -261682
+-66577 0;
+#X text 799 330 - use [cos~] for window;
+#X text 797 355 - needs -0.25 to 0.25 range for window;
+#X text 799 381 - so mult 0-1 range window by 0.5 and subtract 0.25
+;
+#X text 826 285 - o * y = 0.5 -> o = 0.5 / y;
+#X obj 333 389 cnv 15 450 225 empty empty empty 20 12 0 14 -204800
+-66577 0;
+#X text 339 399 TO GET DESIRED MULTIPLIER Y:;
+#X text 339 423 - multiplying at r Hz 0-1 phasor~ by y makes your ramp
+;
+#X text 354 445 get from 0 to y in 1/r secs or 1000/r msecs.;
+#X text 337 567 - x ms = 500/(r*y) -> y = 500/(r*x);
+#X text 339 469 - or 0 to 1 in 1000/(r*y) msecs;
+#X text 333 493 - since we are give the dur of the ramp up or down
+;
+#X text 351 516 (which is actually one half of the real ramp) \,;
+#X text 356 539 we need half the time (500/(r*y) ms);
+#N canvas 602 244 721 580 \$0-grapher 0;
+#X obj 455 274 tabwrite~ \$0-window;
+#X obj 239 275 tabwrite~ \$0-cos_indexer;
+#X obj 7 276 tabwrite~ \$0-loop_indexer;
+#X obj 135 170 r \$0-graph;
+#X obj 58 81 inlet~;
+#X obj 215 82 inlet~;
+#X obj 424 79 inlet~;
+#X connect 3 0 2 0;
+#X connect 3 0 1 0;
+#X connect 3 0 0 0;
+#X connect 4 0 2 0;
+#X connect 5 0 1 0;
+#X connect 6 0 0 0;
+#X restore 7 616 pd \$0-grapher;
+#X obj 145 426 s \$0-graph;
+#X obj 170 343 t b f;
+#X msg 170 368 0.5;
+#X obj 170 393 /;
+#X text 207 301 y = 500/(r*x);
+#N canvas 609 247 631 404 \$0-ctlpanel 0;
+#X obj 101 101 cnv 15 150 100 empty empty empty 20 12 0 14 -260097
+-66577 0;
+#X obj 104 117 bng 30 250 50 0 \$0-graph empty graph_output 35 15 0
+15 -262144 -1 -1;
+#X obj 108 66 loadbang;
+#N canvas 1398 173 399 634 \$0-graphs 0;
+#X obj 28 19 cnv 15 350 550 empty empty empty 20 12 0 14 -261234 -66577
+0;
 #N canvas 0 50 450 250 (subpatch) 0;
 #X array \$0-cos_indexer 110250 float 2;
 #X coords 0 0.25 110250 -0.25 300 140 1 0 0;
-#X restore 641 484 graph;
-#X obj 65 454 *~ 0.5;
-#X obj 68 507 cos~;
-#X obj 57 339 clip~ 0 1;
+#X restore 65 226 graph;
 #N canvas 0 50 450 250 (subpatch) 0;
 #X array \$0-loop_indexer 110250 float 2;
 #X coords 0 1 110250 0 300 140 1 0 0;
-#X restore 638 314 graph;
-#X obj 59 388 +~ 0.5;
-#X obj 59 413 wrap~;
-#X obj 54 245 +~ 0.5;
-#X obj 54 270 wrap~;
+#X restore 62 56 graph;
 #N canvas 0 50 450 250 (subpatch) 0;
 #X array \$0-window 110250 float 2;
 #X coords 0 1 110250 0 300 140 1 0 0;
-#X restore 639 655 graph;
-#X obj 65 479 -~ 0.25;
-#X obj 142 219 *;
-#X obj 166 150 nbx 5 20 0 1e+37 0 0 empty empty phasor_rate 0 -15 0
-20 -262144 -1 -1 1 256;
-#X obj 36 154 nbx 5 20 0 1e+37 0 0 empty empty ms_ramp 0 -15 0 20 -262144
--1 -1 250 256;
-#X obj 167 175 t b f f;
-#X obj 142 244 t b f;
-#X msg 142 269 500;
-#X obj 142 294 /;
-#X obj 61 309 *~ 1;
-#X obj 54 215 phasor~ 1;
-#X obj 322 89 cnv 15 450 100 empty empty empty 20 12 0 14 -262130 -66577
-0;
-#X text 334 145 SOLN: use the 1/2 of a sine wave to window;
-#X text 380 169 and pause in the middle.;
-#X text 383 121 where the loop is driven by a 0-1 phasor~;
-#X text 336 100 GOAL: an x ms ramp at the ends of a loop window;
-#X text 38 183 loop indexer;
-#X obj 197 221 cnv 15 400 100 empty empty empty 20 12 0 14 -204786
--66577 0;
-#X text 202 255 - add 0.5 => 0-1 becomes 0.5-1 and 0-0.5;
-#X text 204 231 - pausing in the middle of ramp = pause at 0.5;
-#X text 204 277 - clip at 1 and mult by y to reach 1 faster;
-#X text 221 297 (and pause) in the middle of the ramp;
-#X obj 199 332 cnv 15 400 100 empty empty empty 20 12 0 14 -203904
--66577 0;
-#X text 204 366 - add 0.5 => 0-1 becomes 0.5-1 and 0-0.5;
-#X text 206 388 - clip at 1 and mult by y to reach 1 faster;
-#X text 223 408 (and pause) in the middle of the ramp;
-#X text 206 342 - add 0.5 and rewrap to get pause at 0.5;
-#X obj 643 248 bng 30 250 50 0 \$0-graph empty graph_output 0 -7 0
-15 -262144 -1 -1;
-#X obj 79 543 r \$0-graph;
-#X obj 177 444 cnv 15 425 100 empty empty empty 20 12 0 14 -261682
--66577 0;
-#X text 184 453 - use [cos~] for window;
-#X text 182 478 - needs -0.25 to 0.25 range for window;
-#X text 184 504 - so mult 0-1 range window by 0.5 and subtract 0.25
-;
-#X obj 29 617 cnv 15 450 200 empty empty empty 20 12 0 14 -204800 -66577
-0;
-#X text 35 627 TO GET DESIRED MULTIPLIER Y:;
-#X text 35 651 - multiplying at r Hz 0-1 phasor~ by y makes your ramp
-;
-#X text 50 673 get from 0 to y in 1/r secs or 1000/r msecs.;
-#X text 35 697 - or 0 to 1/y in 1000/(r*y) msecs;
-#X text 34 723 - due to the wrapping \, we're essentially chopping
-the;
-#X text 46 746 ramp in half so our ramps are actually x=500/(r*y) ms
-;
-#X text 33 773 - x ms = 500/(r*y) -> y = 500/(r*x);
-#X obj 49 19 cnv 15 800 60 empty empty signal-driven_loop_windowing
-20 12 0 25 -260097 -66577 0;
-#X obj 641 203 loadbang;
-#X obj 22 589 tabwrite~ \$0-window;
-#X obj 184 592 tabwrite~ \$0-cos_indexer;
-#X obj 389 592 tabwrite~ \$0-loop_indexer;
-#N canvas 406 291 450 300 labels 0;
+#X restore 63 397 graph;
+#N canvas 406 291 450 300 \$0-labels 0;
 #X msg 181 61 \; \$1-window yticks 0 0.1 5 \; \$1-window ylabel -5
 0 0.5 1;
 #X msg 4 127 \; \$1-loop_indexer yticks 0 0.1 5 \; \$1-loop_indexer
@@ -91,39 +137,54 @@ ylabel -5 -0.25 0 0.25 \;;
 #X connect 2 0 4 0;
 #X connect 3 0 2 0;
 #X connect 3 0 5 0;
-#X restore 693 265 pd labels;
-#X obj 229 85 loadbang;
-#X msg 11 114 250;
-#X msg 132 117 1;
-#X text 704 23 Derek Kwan \, 2016;
-#X text 787 54 gpl v3;
-#X connect 1 0 10 0;
-#X connect 2 0 52 0;
-#X connect 3 0 5 0;
+#X restore 35 582 pd \$0-labels;
+#X restore 170 16 pd \$0-graphs;
+#X obj 106 161 tgl 30 0 empty empty show_graphs 35 15 0 15 -262144
+-1 -1 0 1;
+#X obj 102 223 pack f \$0;
+#X msg 100 265 \; pd-\$2-graphs vis \$1;
+#X connect 2 0 1 0;
+#X connect 4 0 5 0;
 #X connect 5 0 6 0;
-#X connect 6 0 1 0;
-#X connect 7 0 8 0;
-#X connect 8 0 18 0;
-#X connect 10 0 2 0;
-#X connect 10 0 53 0;
-#X connect 11 0 15 0;
-#X connect 12 0 14 0;
-#X connect 13 0 11 0;
-#X connect 14 0 11 0;
-#X connect 14 1 11 1;
-#X connect 14 2 19 0;
-#X connect 15 0 16 0;
-#X connect 15 1 17 1;
-#X connect 16 0 17 0;
-#X connect 17 0 18 1;
-#X connect 18 0 3 0;
-#X connect 19 0 7 0;
-#X connect 19 0 54 0;
-#X connect 37 0 52 0;
-#X connect 37 0 53 0;
-#X connect 37 0 54 0;
-#X connect 51 0 36 0;
-#X connect 56 0 57 0;
-#X connect 56 0 58 0;
-#X connect 57 0 13 0;
-#X connect 58 0 12 0;
+#X coords 0 -1 1 1 150 100 1 100 100;
+#X restore 804 98 pd \$0-ctlpanel;
+#X text 204 381 o = 0.5 / y;
+#X text 47 244 offset;
+#X text 66 347 y;
+#X text 81 466 rewrap for pause in middle;
+#X text 135 522 to cos indexing;
+#X obj 18 265 +~ 0.25;
+#X obj 187 109 t b b;
+#X connect 0 0 5 0;
+#X connect 1 0 64 2;
+#X connect 2 0 31 0;
+#X connect 3 0 0 0;
+#X connect 4 0 11 0;
+#X connect 5 0 1 0;
+#X connect 5 0 64 1;
+#X connect 6 0 34 0;
+#X connect 7 0 9 0;
+#X connect 8 0 6 0;
+#X connect 9 0 6 0;
+#X connect 9 1 6 1;
+#X connect 9 2 12 0;
+#X connect 10 0 33 0;
+#X connect 11 0 2 0;
+#X connect 12 0 64 0;
+#X connect 12 0 76 0;
+#X connect 26 0 77 0;
+#X connect 27 0 8 0;
+#X connect 28 0 7 0;
+#X connect 31 0 3 0;
+#X connect 33 0 66 0;
+#X connect 34 0 65 0;
+#X connect 34 1 10 0;
+#X connect 34 2 33 1;
+#X connect 66 0 67 0;
+#X connect 66 1 68 1;
+#X connect 66 1 11 1;
+#X connect 67 0 68 0;
+#X connect 68 0 76 1;
+#X connect 76 0 4 0;
+#X connect 77 0 27 0;
+#X connect 77 1 28 0;
