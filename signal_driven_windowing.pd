@@ -1,0 +1,127 @@
+#N canvas 175 140 985 840 12;
+#N canvas 0 50 450 250 (subpatch) 0;
+#X array \$0-cos_indexer 110250 float 2;
+#X coords 0 0.25 110250 -0.25 300 140 1 0 0;
+#X restore 641 484 graph;
+#X obj 65 454 *~ 0.5;
+#X obj 68 507 cos~;
+#X obj 57 339 clip~ 0 1;
+#N canvas 0 50 450 250 (subpatch) 0;
+#X array \$0-loop_indexer 110250 float 2;
+#X coords 0 1 110250 0 300 140 1 0 0;
+#X restore 638 314 graph;
+#X obj 59 388 +~ 0.5;
+#X obj 59 413 wrap~;
+#X obj 54 245 +~ 0.5;
+#X obj 54 270 wrap~;
+#N canvas 0 50 450 250 (subpatch) 0;
+#X array \$0-window 110250 float 2;
+#X coords 0 1 110250 0 300 140 1 0 0;
+#X restore 639 655 graph;
+#X obj 65 479 -~ 0.25;
+#X obj 142 219 *;
+#X obj 166 150 nbx 5 20 0 1e+37 0 0 empty empty phasor_rate 0 -15 0
+20 -262144 -1 -1 1 256;
+#X obj 36 154 nbx 5 20 0 1e+37 0 0 empty empty ms_ramp 0 -15 0 20 -262144
+-1 -1 250 256;
+#X obj 167 175 t b f f;
+#X obj 142 244 t b f;
+#X msg 142 269 500;
+#X obj 142 294 /;
+#X obj 61 309 *~ 1;
+#X obj 54 215 phasor~ 1;
+#X obj 322 89 cnv 15 450 100 empty empty empty 20 12 0 14 -262130 -66577
+0;
+#X text 334 145 SOLN: use the 1/2 of a sine wave to window;
+#X text 380 169 and pause in the middle.;
+#X text 383 121 where the loop is driven by a 0-1 phasor~;
+#X text 336 100 GOAL: an x ms ramp at the ends of a loop window;
+#X text 38 183 loop indexer;
+#X obj 197 221 cnv 15 400 100 empty empty empty 20 12 0 14 -204786
+-66577 0;
+#X text 202 255 - add 0.5 => 0-1 becomes 0.5-1 and 0-0.5;
+#X text 204 231 - pausing in the middle of ramp = pause at 0.5;
+#X text 204 277 - clip at 1 and mult by y to reach 1 faster;
+#X text 221 297 (and pause) in the middle of the ramp;
+#X obj 199 332 cnv 15 400 100 empty empty empty 20 12 0 14 -203904
+-66577 0;
+#X text 204 366 - add 0.5 => 0-1 becomes 0.5-1 and 0-0.5;
+#X text 206 388 - clip at 1 and mult by y to reach 1 faster;
+#X text 223 408 (and pause) in the middle of the ramp;
+#X text 206 342 - add 0.5 and rewrap to get pause at 0.5;
+#X obj 643 248 bng 30 250 50 0 \$0-graph empty graph_output 0 -7 0
+15 -262144 -1 -1;
+#X obj 79 543 r \$0-graph;
+#X obj 177 444 cnv 15 425 100 empty empty empty 20 12 0 14 -261682
+-66577 0;
+#X text 184 453 - use [cos~] for window;
+#X text 182 478 - needs -0.25 to 0.25 range for window;
+#X text 184 504 - so mult 0-1 range window by 0.5 and subtract 0.25
+;
+#X obj 29 617 cnv 15 450 200 empty empty empty 20 12 0 14 -204800 -66577
+0;
+#X text 35 627 TO GET DESIRED MULTIPLIER Y:;
+#X text 35 651 - multiplying at r Hz 0-1 phasor~ by y makes your ramp
+;
+#X text 50 673 get from 0 to y in 1/r secs or 1000/r msecs.;
+#X text 35 697 - or 0 to 1/y in 1000/(r*y) msecs;
+#X text 34 723 - due to the wrapping \, we're essentially chopping
+the;
+#X text 46 746 ramp in half so our ramps are actually x=500/(r*y) ms
+;
+#X text 33 773 - x ms = 500/(r*y) -> y = 500/(r*x);
+#X obj 49 19 cnv 15 800 60 empty empty signal-driven_loop_windowing
+20 12 0 25 -260097 -66577 0;
+#X obj 641 203 loadbang;
+#X obj 22 589 tabwrite~ \$0-window;
+#X obj 184 592 tabwrite~ \$0-cos_indexer;
+#X obj 389 592 tabwrite~ \$0-loop_indexer;
+#N canvas 9 107 450 300 labels 0;
+#X msg 181 61 \; \$1-window yticks 0 0.1 5 \; \$1-window ylabel -5
+0 0.5 1;
+#X msg 4 127 \; \$1-loop_indexer yticks 0 0.1 5 \; \$1-loop_indexer
+ylabel -5 0 0 0.5 1 \;;
+#X msg 9 197 \; \$1-cos-indexer yticks -0.25 0.125 2 \; \$1-cos-indexer
+ylabel -5 -0.25 0 0.25 \;;
+#X obj 60 51 f \$0;
+#X obj 76 19 loadbang;
+#X connect 3 0 0 0;
+#X connect 3 0 1 0;
+#X connect 3 0 2 0;
+#X connect 4 0 3 0;
+#X restore 693 265 pd labels;
+#X obj 229 85 loadbang;
+#X msg 11 114 250;
+#X msg 132 117 1;
+#X text 704 23 Derek Kwan \, 2016;
+#X text 787 54 gpl v3;
+#X connect 1 0 10 0;
+#X connect 2 0 52 0;
+#X connect 3 0 5 0;
+#X connect 5 0 6 0;
+#X connect 6 0 1 0;
+#X connect 7 0 8 0;
+#X connect 8 0 18 0;
+#X connect 10 0 2 0;
+#X connect 10 0 53 0;
+#X connect 11 0 15 0;
+#X connect 12 0 14 0;
+#X connect 13 0 11 0;
+#X connect 14 0 11 0;
+#X connect 14 1 11 1;
+#X connect 14 2 19 0;
+#X connect 15 0 16 0;
+#X connect 15 1 17 1;
+#X connect 16 0 17 0;
+#X connect 17 0 18 1;
+#X connect 18 0 3 0;
+#X connect 19 0 7 0;
+#X connect 19 0 54 0;
+#X connect 37 0 52 0;
+#X connect 37 0 53 0;
+#X connect 37 0 54 0;
+#X connect 51 0 36 0;
+#X connect 56 0 57 0;
+#X connect 56 0 58 0;
+#X connect 57 0 13 0;
+#X connect 58 0 12 0;
