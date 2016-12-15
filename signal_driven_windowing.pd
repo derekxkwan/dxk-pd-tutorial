@@ -1,4 +1,4 @@
-#N canvas 175 140 985 840 12;
+#N canvas 184 155 985 840 12;
 #N canvas 0 50 450 250 (subpatch) 0;
 #X array \$0-cos_indexer 110250 float 2;
 #X coords 0 0.25 110250 -0.25 300 140 1 0 0;
@@ -76,19 +76,21 @@ the;
 #X obj 22 589 tabwrite~ \$0-window;
 #X obj 184 592 tabwrite~ \$0-cos_indexer;
 #X obj 389 592 tabwrite~ \$0-loop_indexer;
-#N canvas 9 107 450 300 labels 0;
+#N canvas 406 291 450 300 labels 0;
 #X msg 181 61 \; \$1-window yticks 0 0.1 5 \; \$1-window ylabel -5
 0 0.5 1;
 #X msg 4 127 \; \$1-loop_indexer yticks 0 0.1 5 \; \$1-loop_indexer
 ylabel -5 0 0 0.5 1 \;;
-#X msg 9 197 \; \$1-cos-indexer yticks -0.25 0.125 2 \; \$1-cos-indexer
-ylabel -5 -0.25 0 0.25 \;;
 #X obj 60 51 f \$0;
 #X obj 76 19 loadbang;
-#X connect 3 0 0 0;
-#X connect 3 0 1 0;
+#X msg 9 197 \; \$1-cos_indexer yticks -0.25 0.125 2 \; \$1-cos_indexer
+ylabel -5 -0.25 0 0.25 \;;
+#X msg 218 36 \; pd dsp 1;
+#X connect 2 0 0 0;
+#X connect 2 0 1 0;
+#X connect 2 0 4 0;
 #X connect 3 0 2 0;
-#X connect 4 0 3 0;
+#X connect 3 0 5 0;
 #X restore 693 265 pd labels;
 #X obj 229 85 loadbang;
 #X msg 11 114 250;
