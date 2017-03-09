@@ -1,0 +1,58 @@
+#N canvas 77 96 1341 531 12;
+#X obj 49 452 rpole~ 0.885;
+#X text 156 426 x[0] + c*y[-1];
+#X text 157 449 leaky integrator;
+#X obj 51 324 rzero~ 1;
+#X obj 47 359 rpole~ 0.8;
+#X text 144 322 x[0]-x[-1]+c*y[-1];
+#X text 143 345 DC blocker;
+#X obj 355 328 rzero~ -1;
+#X obj 355 353 *~ 0.5;
+#X text 443 323 0.5*(x[0] + x[-1]);
+#X text 439 350 two-point average filter;
+#X obj 359 421 rzero~ 1;
+#X text 438 427 0.5*(x[0] - x[-1]);
+#X text 431 456 two-point difference filter;
+#X obj 359 446 *~ 0.5;
+#X text 245 139 two-zero midcut;
+#X obj 48 159 rzero~ 1;
+#X obj 42 199 rzero~ 1;
+#X obj 47 238 *~ 0.25;
+#X obj 439 218 rzero~ 1;
+#X obj 439 243 *~ 0.5;
+#X obj 440 188 rzero~ -1;
+#X text 537 174 x[0]+x[-1];
+#X text 528 221 the second's x[0] = x[0]+x[-1];
+#X text 127 146 x[0]-x[-1];
+#X text 148 206 the second's x[0] = x[0]-x[1];
+#X text 148 224 -> x[0]-x[-1] - (x[-1]-x[-2]);
+#X text 531 267 -> x[0]-x[-2];
+#X text 528 244 -> x[0]+x[-1]-(x[-1]+x[-2]);
+#X text 148 244 -> x[0]-2*x[-1]+x[-2];
+#X text 642 149 two-zero midpass;
+#X text 642 130 0.5*(x[0] - x[-2]);
+#X text 244 118 0.25*(x[0] - 2*x[-1] + x[-2]);
+#X obj 29 10 cnv 15 300 60 empty empty simple_example_filters1 20 12
+0 20 -204800 -66577 0;
+#X text 188 44 Derek Kwan 2017;
+#X text 853 15 Since these filters strictly deal with REAL coefficients
+\, they can only directly effect frequencies located on the real axis
+\, where 1 affects 0 Hz (aka DC) and -1 affects the frequency at half
+the sampling rate (aka pi \, aka nyquist \, aka 22050 Hz at 44100 Hz
+sampling rate).;
+#X text 848 232 poles and zeros with < abs(1) radius have less of an
+effect than ones directly at 1 and -1;
+#X text 346 10 think of zeros and poles likes holes in the ground and
+tent poles respectively. zeros supress the magnitude of a frequency
+response where they're located \, tent poles push the magnitude frequency
+response up.;
+#X text 848 157 To affect frequencies other than these (say \, 440
+Hz) \, we're going to need COMPLEX zeros and poles. These are provided
+with [czero~] and [cpole~].;
+#X connect 3 0 4 0;
+#X connect 7 0 8 0;
+#X connect 11 0 14 0;
+#X connect 16 0 17 0;
+#X connect 17 0 18 0;
+#X connect 19 0 20 0;
+#X connect 21 0 19 0;
