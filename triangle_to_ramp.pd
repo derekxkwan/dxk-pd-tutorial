@@ -1,0 +1,121 @@
+#N canvas 611 210 1182 929 12;
+#X obj 77 33 cnv 15 350 60 empty empty triangle_to_ramp 20 12 0 18
+-233017 -66577 0;
+#X text 85 57 how to convert a triangle wave to a 0-1 ramp;
+#X text 186 199 here's your -1 to 1 triangle wave;
+#N canvas 0 50 450 250 (subpatch) 0;
+#X array tri_wave_graph 64 float 3;
+#A 0 0.384556 0.475259 0.565962 0.656665 0.747368 0.838071 0.928774
+0.980524 0.889821 0.799118 0.708415 0.617712 0.527009 0.436306 0.345603
+0.2549 0.164197 0.0734942 -0.0172088 -0.107912 -0.198615 -0.289318
+-0.380021 -0.470724 -0.561426 -0.652129 -0.742832 -0.833535 -0.924238
+-0.985059 -0.894356 -0.803653 -0.71295 -0.622247 -0.531544 -0.440841
+-0.350138 -0.259435 -0.168732 -0.0780294 0.0126736 0.103377 0.194079
+0.284782 0.375485 0.466188 0.556891 0.647594 0.738297 0.829 0.919703
+0.989594 0.898891 0.808188 0.717485 0.626782 0.536079 0.445376 0.354673
+0.263971 0.173268 0.0825646 -0.00813842 -0.0988412;
+#X coords 0 1 64 -1 200 140 1 0 0;
+#X restore 461 143 graph;
+#X obj 205 300 tabwrite~ tri_wave_graph;
+#X obj 245 239 bng 15 250 50 0 empty empty GRAPH 17 7 0 15 -262144
+-1 -1;
+#X text 486 304 the idea is to separate the up and down ramps;
+#X text 488 323 to do this: use rzero~ 1 (x[n] - x[n-1]);
+#X text 512 342 - the output of this will be positive on upramps \,
+;
+#X text 527 360 and negative on downrapms;
+#X text 511 383 - make this output huge by multiplying by a huge number
+;
+#X text 509 403 - an clip this value to 0 and 1 so huge + = 1 \, huge
+- = 0;
+#X text 480 434 we now have an indicator of upramps!;
+#X text 480 454 so for the opposite \, (downramp indicator) \, multiply
+by -1;
+#N canvas 622 316 1092 813 tri_wave 0;
+#X obj 446 134 min~;
+#X obj 477 85 *~ -1;
+#X obj 477 109 +~ 1;
+#X obj 435 184 -~ 0.25;
+#X obj 384 230 *~ 4;
+#X obj 460 28 phasor~ 0.25;
+#X obj 372 289 outlet~;
+#X floatatom 134 134 5 0 0 0 freq - -, f 5;
+#X obj 133 53 loadbang;
+#X msg 133 77 1000;
+#X connect 0 0 3 0;
+#X connect 1 0 2 0;
+#X connect 2 0 0 1;
+#X connect 3 0 4 0;
+#X connect 4 0 6 0;
+#X connect 5 0 0 0;
+#X connect 5 0 1 0;
+#X connect 7 0 5 0;
+#X connect 8 0 9 0;
+#X connect 9 0 7 0;
+#X coords 0 -1 1 1 85 60 1 100 100;
+#X restore 95 193 pd tri_wave;
+#X obj 76 399 rzero~ 1;
+#X obj 76 423 *~ 1e+30;
+#X obj 76 447 clip~ 0 1;
+#X obj 275 404 rzero~ 1;
+#X obj 275 428 *~ 1e+30;
+#X obj 275 452 clip~ 0 1;
+#X obj 275 372 *~ -1;
+#X text 578 574 all that's left is scaling:;
+#X text 620 595 - want upramp to be 0 - 0.5 \, downramp to be 0.5 to
+1;
+#X text 620 623 - multiply our scaled quantities by their proper indicators
+;
+#X text 623 650 - and add them both together!;
+#X obj 166 494 /~ 4;
+#X obj 166 518 +~ 0.25;
+#X text 228 512 scales from -1 to 1 to 0 to 0.5;
+#X obj 77 617 *~;
+#X text 126 612 our scaled upramp of 0 to 0.5 mult by upramp indicator
+;
+#X obj 225 683 *~ -1;
+#X obj 225 707 +~ 1;
+#X text 284 689 0.5 to 0 downramp -> -0.5 to 0;
+#X text 281 708 -> 0.5 to 1;
+#X obj 225 731 *~;
+#X text 265 735 mult by our downramp indicator;
+#X obj 82 831 +~;
+#X obj 84 886 tabwrite~ ramp;
+#X text 127 829 add them together to get our ramp;
+#N canvas 0 50 450 250 (subpatch) 0;
+#X array ramp 64 float 3;
+#A 0 0.346139 0.368815 0.39149 0.414166 0.436842 0.459518 0.482193
+0.495131 0.527545 0.550221 0.572896 0.595572 0.618248 0.640924 0.663599
+0.686275 0.708951 0.731626 0.754302 0.776978 0.799654 0.822329 0.845005
+0.867681 0.890357 0.913032 0.935708 0.958384 0.98106 0.996265 0.026411
+0.0490868 0.0717625 0.0944382 0.117114 0.13979 0.162465 0.185141 0.207817
+0.230493 0.253168 0.275844 0.29852 0.321196 0.343871 0.366547 0.389223
+0.411899 0.434574 0.45725 0.479926 0.497398 0.525277 0.547953 0.570629
+0.593304 0.61598 0.638656 0.661332 0.684007 0.706683 0.729359 0.752035
+0.77471;
+#X coords 0 1 64 -1 200 140 1 0 0;
+#X restore 678 143 graph;
+#X text 1016 45 derek kwan;
+#X text 1020 64 dxk pd tutorial;
+#X text 1027 97 gpl v3 2018;
+#X connect 5 0 4 0;
+#X connect 5 0 38 0;
+#X connect 14 0 4 0;
+#X connect 14 0 15 0;
+#X connect 14 0 21 0;
+#X connect 14 0 26 0;
+#X connect 15 0 16 0;
+#X connect 16 0 17 0;
+#X connect 17 0 29 0;
+#X connect 18 0 19 0;
+#X connect 19 0 20 0;
+#X connect 20 0 35 1;
+#X connect 21 0 18 0;
+#X connect 26 0 27 0;
+#X connect 27 0 29 1;
+#X connect 27 0 31 0;
+#X connect 29 0 37 0;
+#X connect 31 0 32 0;
+#X connect 32 0 35 0;
+#X connect 35 0 37 1;
+#X connect 37 0 38 0;
